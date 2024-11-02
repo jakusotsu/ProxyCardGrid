@@ -17,11 +17,11 @@ pip install Pillow reportlab waifu2x-ncnn-py
 ```
 
 ## Usage
-# Place Images:
+### Place Images:
 Place the images you want to resize and include in the PDF in the same directory as the script.
 Supported formats are .png, .jpg, and .jpeg.
 
-# Run the Script:
+### Run the Script:
 Execute the script from your terminal or command prompt:
 
 ```bash
