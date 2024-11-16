@@ -25,7 +25,7 @@ def generate_pdf(output_pdf):
     page_width, page_height = letter  # 8.5 x 11 inches
     
     # List all image files in the directory
-    image_files = [os.path.join(images_dir, f) for f in os.listdir(images_dir) if f.endswith(('.png', '.jpg', '.jpeg'))]
+    image_files = [(os.path.join(images_dir, f), True if f.startswith('_') else False) for f in os.listdir(images_dir) if f.endswith(('.png', '.jpg', '.jpeg'))]
     
     # Ensure we have images
     if len(image_files) == 0:
@@ -34,17 +34,18 @@ def generate_pdf(output_pdf):
     temp_image_files = []
     
     # Resize images and save them to temporary files
-    for img_file in image_files:
+    for (img_file, single) in image_files:
         # Resize the image using waifu2x
         output_image = waifu2x_resize(img_file, scale=2)  # Change scale as needed
         
         # Save the resized image to a temporary file once
-        with tempfile.NamedTemporaryFile(suffix='.png', delete=False) as tmpfile:
+        with tempfile.NamedTemporaryFile(suffix='.png', delete=False, dir=images_dir) as tmpfile:
             output_image.save(tmpfile, format="PNG")
             temp_image_files.append(tmpfile.name)  # Store the temp file name
         
         # Duplicate the reference three times in a list for usage in the PDF
-        temp_image_files.extend([tmpfile.name] * 2)  # Add it twice more for a total of three references
+        if not single:
+            temp_image_files.extend([tmpfile.name] * 2)  # Add it twice more for a total of three references
 
     # Create a PDF canvas with explicit page size of 8.5 x 11 inches
     pdf_canvas = canvas.Canvas(output_pdf, pagesize=letter)
@@ -73,7 +74,11 @@ def generate_pdf(output_pdf):
 
     # Clean up temporary image files
     for temp_file in temp_image_files:
-        os.remove(temp_file)  # Remove the temporary file after use
+        try:
+            os.remove(temp_file)  # Remove the temporary file after use
+        except Exception as e:
+            print(f"Error removing temporary file {temp_file}: {e}")
+
 
 # Define the output PDF file name
 output_pdf = 'output.pdf'
