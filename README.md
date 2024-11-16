@@ -20,6 +20,9 @@ pip install Pillow reportlab waifu2x-ncnn-py
 ### Place Images:
 Place the images you want to resize and include in the PDF in the same directory as the script.
 Supported formats are .png, .jpg, and .jpeg.
+The images will be arranged in a grid format, with each image displayed three times.
+
+Prepend a '_' to the image filename (_image.jpg) if you only want 1 copy of that image.
 
 ### Run the Script:
 Execute the script from your terminal or command prompt:
@@ -29,4 +32,4 @@ python CardGrid.py
 ```
 # Output PDF:
 Upon successful execution, a PDF named output.pdf will be generated in the same directory.
-The images will be arranged in a grid format, with each image displayed three times.
+
